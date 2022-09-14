@@ -35,7 +35,7 @@ jobs:
       id: deploy
       run: |
         aws deploy create-deployment \
-        --application-name tomcat-app \
-        --deployment-group-name tomcat-app-cd1 \
+        --application-name vprofile \
+        --deployment-group-name vprofile \
         --deployment-config-name CodeDeployDefault.OneAtATime \
         --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
