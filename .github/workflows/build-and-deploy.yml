@@ -26,10 +26,13 @@ jobs:
 
     - name: Upload the build output
       uses: actions/upload-artifact@v2
+      run: |
+        mkdir output
+        cp target/vprofile-v2.war output/vprofile-v2.war
       with:
-        name: build-output
+        name: vprofile-v2.war
         path: |
-            output/
+            output/vprofile-v2.war
         retention-days: 1
   deploy:
     name: Deploy to EC2
