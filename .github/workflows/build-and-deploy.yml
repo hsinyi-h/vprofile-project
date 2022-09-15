@@ -52,13 +52,13 @@ jobs:
           aws-region: ap-northeast-1
       - name: copy to S3 bucket
         run: |
-          aws s3 cp --region ap-northeast-1 /home/runner/work/vprofile-project/vprofile-project/vprofile-v2.war s3://artifactstore-814380675453/vprofile-v2.war
+          aws s3 cp --region ap-northeast-1 /home/runner/work/vprofile-project/vprofile-project/vprofile-v2.war s3://artifactstore-814380675453/vprofile-v2.zip
       - name: Create CodeDeploy Deployment
         id: deploy
         run: |
           aws deploy create-deployment \
           --application-name vprofile-test \
-          --s3-location bucket=artifactstore-814380675453
+          --s3-location bucket=artifactstore-814380675453,key=vprofile-v2.zip, bundleType=zip
           --deployment-group-name vprofile-app \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
