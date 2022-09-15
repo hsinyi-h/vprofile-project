@@ -58,7 +58,7 @@ jobs:
         run: |
           aws deploy create-deployment \
           --application-name vprofile-test \
-          --s3-location bucket=artifactstore-814380675453,bundleType=zip,key=vprofile-v2.zip \
+          --revision revisionType=s3,s3Location=artifactstore-814380675453,key=vprofile-v2.zip,bundleType=zip \
           --deployment-group-name vprofile-app \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
