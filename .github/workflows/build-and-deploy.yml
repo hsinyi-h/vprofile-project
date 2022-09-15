@@ -30,7 +30,7 @@ jobs:
       with:
         name: vprofile-v2.war
         path: |
-            output/vprofile-v2.war
+            ./vprofile-v2.war
         retention-days: 1
 
   deploy:
