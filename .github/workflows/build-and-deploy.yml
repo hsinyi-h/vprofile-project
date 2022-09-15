@@ -24,18 +24,34 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Configure aws credentials
-      uses: aws-actions/configure-aws-credentials@v1
+    - name: Upload the build output
+      uses: actions/upload-artifact@v2
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-1
+        name: build-output
+        path: |
+            output/
+        retention-days: 1
+  deploy:
+    name: Deploy to EC2
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the build output
+        uses: actions/download-artifact@v2
+        with:
+          name: build-output
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
 
-    - name: Create CodeDeploy Deployment
-      id: deploy
-      run: |
-        aws deploy create-deployment \
-        --application-name vprofile-test \
-        --deployment-group-name vprofile-app \
-        --deployment-config-name CodeDeployDefault.OneAtATime \
-        --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+      - name: Create CodeDeploy Deployment
+        id: deploy
+        run: |
+          aws deploy create-deployment \
+          --application-name vprofile-test \
+          --deployment-group-name vprofile-app \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
